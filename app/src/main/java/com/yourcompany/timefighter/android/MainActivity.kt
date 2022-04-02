@@ -67,7 +67,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun resetGame() {
         score = 0
-        updateGameScoreTextView()
+        gameScoreTextView.text = getString(R.string.yourScore, score)
 
         val initialTimeLeft = initialCountDown / 1000
         timeLeftTextView.text = getString(R.string.timeLeft, initialTimeLeft)
@@ -88,7 +88,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun restoreGame() {
-        updateGameScoreTextView()
+        gameScoreTextView.text = getString(R.string.yourScore, score)
 
         val restoredTime = timeLeftOnTimer / 1000
         timeLeftTextView.text = getString(R.string.timeLeft, restoredTime)
@@ -119,15 +119,11 @@ class MainActivity : AppCompatActivity() {
         resetGame()
     }
 
-    private fun updateGameScoreTextView() {
-        gameScoreTextView.text = getString(R.string.yourScore, score)
-    }
-
     private fun incrementScore() {
         if (!gameStarted) {
             startGame()
         }
         score += 1
-        updateGameScoreTextView()
+        gameScoreTextView.text = getString(R.string.yourScore, score)
     }
 }
