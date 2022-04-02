@@ -42,9 +42,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (savedInstanceState != null) {
-            score = savedInstanceState.getInt(SCORE_KEY)
-            timeLeftOnTimer = savedInstanceState.getLong(TIME_LEFT_KEY)
-            restoreGame()
+            var restoredScore = savedInstanceState.getInt(SCORE_KEY)
+            var restoredTimeLeft = savedInstanceState.getLong(TIME_LEFT_KEY)
+            resetGame(restoredScore, restoredTimeLeft)
         } else {
             resetGame()
         }
@@ -65,35 +65,16 @@ class MainActivity : AppCompatActivity() {
         Log.d(TAG, "onDestroy called")
     }
 
-    private fun resetGame() {
-        score = 0
+    private fun resetGame(newScore: Int = 0, timeOnTimer: Long = initialCountDown) {
+        score = newScore
+        timeLeftOnTimer = timeOnTimer
+
         gameScoreTextView.text = getString(R.string.yourScore, score)
 
-        val initialTimeLeft = initialCountDown / 1000
-        timeLeftTextView.text = getString(R.string.timeLeft, initialTimeLeft)
+        val timeLeft = timeOnTimer / 1000
+        timeLeftTextView.text = getString(R.string.timeLeft, timeLeft)
 
-        countDownTimer = object : CountDownTimer(initialCountDown, countDownInterval) {
-            override fun onTick(millisUnitlFinished: Long) {
-                timeLeftOnTimer = millisUnitlFinished
-                val timeLeft = millisUnitlFinished / 1000
-                timeLeftTextView.text = getString(R.string.timeLeft, timeLeft)
-            }
-
-            override fun onFinish() {
-                endGame()
-            }
-        }
-
-        gameStarted = false
-    }
-
-    private fun restoreGame() {
-        gameScoreTextView.text = getString(R.string.yourScore, score)
-
-        val restoredTime = timeLeftOnTimer / 1000
-        timeLeftTextView.text = getString(R.string.timeLeft, restoredTime)
-
-        countDownTimer = object : CountDownTimer(timeLeftOnTimer, countDownInterval) {
+        countDownTimer = object : CountDownTimer(timeOnTimer, countDownInterval) {
             override fun onTick(millisUntilFinished: Long) {
                 timeLeftOnTimer = millisUntilFinished
                 val timeLeft = millisUntilFinished / 1000
@@ -105,8 +86,10 @@ class MainActivity : AppCompatActivity() {
             }
         }
 
-        countDownTimer.start()
-        gameStarted = true
+        gameStarted = score > 0 || timeLeftOnTimer != initialCountDown
+        if (gameStarted) {
+            countDownTimer.start()
+        }
     }
 
     private fun startGame() {
