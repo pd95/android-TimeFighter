@@ -37,7 +37,7 @@ class MainActivity : AppCompatActivity() {
         gameScoreTextView = findViewById(R.id.gameScoreTextView)
         timeLeftTextView = findViewById(R.id.timeLeftTextView)
 
-        tapMeButton.setOnClickListener { view ->
+        tapMeButton.setOnClickListener { _ ->
             incrementScore()
         }
 
